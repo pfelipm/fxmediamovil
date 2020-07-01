@@ -6,11 +6,11 @@
  * 
  * @param {A2:A10} intervalo Intervalo de datos, que se suponen en columnas.
  * @param {4} n_puntos Número de valores a promediar (3 por defecto). Solo tiene efecto en
- * el cálculo de las medias móviles NORMAL, CENTRAL y PONDERADA.
- * @param {"NORMAL"} tipo Tipo de media a calcular (ACUMULADA | CENTRAL | EXPONENCIAL | [NORMAL] | PONDERADA).
+ * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
+ * @param {"SIMPLE"} tipo Tipo de media a calcular (ACUMULADA | CENTRAL | EXPONENCIAL | [SIMPLE] | PONDERADA).
  * @param {true} rellenar Indica si se deben tomar los valores del conjunto de datos de origen cuando no se dispone del 
  * número de puntos necesario para calcular el valor de la media móvil ([TRUE] | FALSE). Solo tiene efecto en
- * el cálculo de las medias móviles NORMAL, CENTRAL y PONDERADA.
+ * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
  *
  * @return Intervalo de datos calculados
  *
@@ -20,7 +20,7 @@
  * Copyright (c) 2020 Pablo Felip Monferrer(@pfelipm)
  */ 
 
-function MEDIAMOVIL(intervalo, tipo = 'NORMAL', n_puntos = 3, rellenar = true) {
+function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
 
   // Control de parámetros inicial
   
@@ -29,11 +29,10 @@ function MEDIAMOVIL(intervalo, tipo = 'NORMAL', n_puntos = 3, rellenar = true) {
   if (n_puntos < 2) throw ('N debe ser mayor que 1.');
   if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
   tipo = tipo.toUpperCase();
-  if (!(["NORMAL", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
+  if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
   if (typeof rellenar != 'boolean') throw('Indicación de relleno de datos errónea, debe ser VERDADERO o FALSO');
-  if (intervalo.length < n_puntos) throw('No hay suficientes valores en el intérvalo.');
-  if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.');
-  
+  if (["SIMPLE", "CENTRAL", "PONDERADA"].some(t => t == tipo) && intervalo.length < n_puntos) throw('No hay suficientes valores en el intervalo.');
+  if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.'); 
   
   // Parece que todo correcto, calculemos la media móvil
   
@@ -49,9 +48,9 @@ function MEDIAMOVIL(intervalo, tipo = 'NORMAL', n_puntos = 3, rellenar = true) {
       
       switch (tipo) {
       
-        // Media móvil NORMAL
+        // Media móvil SIMPLE
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        case 'NORMAL':
+        case 'SIMPLE':
           
           // [posición_valor_en_serie < n] Aún no disponemos de suficientes puntos para calcular la MM
           if (f < n_puntos - 1) {
