@@ -28,7 +28,7 @@ Además, en el caso de las medias **simple**, **central** y **ponderada** es pos
 *   `intervalo`: Rango de datos sobre los que se debe calcular la media móvil. Se admiten rangos con varias columnas, en ese caso se obtendrá un intervalo con tantas series calculadas como columnas.
 *   `tipo`: Tipo de media móvil a calcular (literal): "`ACUMULADA"` | `"CENTRAL"` | `"EXPONENCIAL"` | \[`"SIMPLE"`\] | `"PONDERADA"`. Este parámetro (literal) es opcional, de no especificarse se utiliza la media simple.
 *   `n_puntos`: Tamaño de la ventana (número entero). Si no se indica se toma como valor predeterminado 3. Este parámetro no tiene efecto en las medias de tipo acumulado y exponencial.
-*   `rellenar`: Especifica qué debe hacerse con aquellos elementos de la secuencia de datos para los que no puede realizarse el cálculo dado que no hay suficientes elementos en la ventana indicada (booleano). Si es `VERDADERO` se utiliza el valor del propio elemento. Si es `FALSO` se deja un espacio en blanco en la serie calculada.
+*   `rellenar`: Especifica qué debe hacerse con aquellos elementos de la secuencia de datos para los que no puede realizarse el cálculo dado que no hay suficientes elementos en la ventana indicada (booleano). Si es `VERDADERO` se utiliza el valor del propio elemento. Si es `FALSO` se deja un espacio en blanco en la serie calculada. Si se omite se asume `VERDADERO`. Este parámetro tampoco tiene efecto en las medias de tipo acumulado y exponencial.
 
 Ejemplo:
 
