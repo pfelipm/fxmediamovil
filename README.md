@@ -33,7 +33,7 @@ Además, en el caso de las medias **simple**, **central** y **ponderada** es pos
 Ejemplo:
 
 ```
-=MEDIAMOVIL( A1:B10 ; "CENTRAL" ;3 ; FALSO)
+=MEDIAMOVIL( A1:B10 ; "CENTRAL" ; 3 ; FALSO)
 ```
 
 ![fx MEDIAMOVIL - Hojas de cálculo de Google](https://user-images.githubusercontent.com/12829262/86264208-82290f80-bbc2-11ea-8f0c-84c597f8600d.gif)
