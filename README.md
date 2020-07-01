@@ -36,13 +36,13 @@ Ejemplo:
 =MEDIAMOVIL( A1:B10 ; "CENTRAL" ; 3 ; FALSO)
 ```
 
-![fx MEDIAMOVIL - Hojas de cálculo de Google](https://user-images.githubusercontent.com/12829262/86264208-82290f80-bbc2-11ea-8f0c-84c597f8600d.gif)
+![fx MEDIAMOVIL - Hojas de cálculo de Google](https://user-images.githubusercontent.com/12829262/86271246-dafda580-bbcc-11ea-90ae-9536ca8fbf7c.gif)
 
 # **Modo de uso**
 
 Dos posibilidades distintas:
 
-1.  Abre el editor GAS de tu hoja de cálculo (`Herramientas` :fast\_forward: `Editor de secuencias de comandos`), pega el código que encontrarás dentro del archivo `Código.gs` de este repositorio y guarda los cambios. Debes asegurarte de que se esté utilizando el nuevo motor GAS JavaScript V8 (`Ejecutar`  :fast\_forward: `Habilitar ... V8`).
+1.  Abre el editor GAS de tu hoja de cálculo (`Herramientas` :fast\_forward: `Editor de secuencias de comandos`), pega el código que encontrarás dentro del archivo `Código.gs` de este repositorio y guarda los cambios. Debes asegurarte de que se esté utilizando el nuevo motor GAS JavaScript V8 (`Ejecutar` :fast\_forward: `Habilitar ... V8`).
 2.  Hazte una copia de esto :point\_right: [fx MEDIAMOVIL # demo](https://docs.google.com/spreadsheets/d/1rioEO9zZ4RqzQidTgrPzpTu7-m6wmjnBem5iV5u2qK4/template/preview) :point\_left: y elimina su contenido.
 
 Esta función estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/).
@@ -53,13 +53,13 @@ Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementac
 
 *   El tiempo de ejecución está limitado a 30 segundos.
 *   Solo pueden modificar los datos contenidos en las celdas de los intervalos (rangos) que se pasan como parámetros.
-*   No es posible hacer ciertas cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita 
+*   No es posible hacer ciertas cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita
 
 Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en cualquier fórmula, así de sencillo. Pero en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
 
 Para que la experiencia de uso de estas funciones personalizadas GAS sea lo más parecida posible a la del resto de funciones integradas en las hojas de cálculo de Google conviene incorporar en ellas la típica [ayuda contextual,](https://developers.google.com/apps-script/guides/sheets/functions#autocomplete) según se escribe, que nos va indicando cómo utilizar la función. Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores JSDoc adicionales.Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
 
-Veamos qué pinta tiene esto del JSDoc en esta función:
+Veamos qué pinta tiene esto del JSDoc en esta función. Fíjate en las etiquetas que comienzan con @ y en cómo se relacionan con los parámetros definidos en la declaración de la función, justo en la última línea. Estamos usando el motor de ejecución V8 de Apps Script, eso nos permite declarar parámetros opcionales con valores por defecto (`n_puntos`, `rellenar`). Hace unos meses no era posible usar ambas cosas (V8 y parámetros por defecto) sin romper la ayuda contextual. Afortunadamente eso ya es cosa del pasado. En fin, que V8 mula mucho. Si aún no te has pasado a la sintaxis V8, que sea por alguno de sus bugs, que aún le quedan unos cuantos.
 
 ```javascript
 /**
@@ -82,8 +82,97 @@ Veamos qué pinta tiene esto del JSDoc en esta función:
 *
 * MIT License
 * Copyright (c) 2020 Pablo Felip Monferrer(@pfelipm)
-*/ 
+*/
+
+function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) { 
 ```
+
+A continuación, los inevitables controles sobre los parámetros para evitar errores en ejecución. Por muchos hagas, siempre llega alguien capaz de romper su lógica y generar un error usando tu función ¿verdad? :facepalm:
+
+```javascript
+ // Control de parámetros inicial
+
+ if (typeof intervalo == 'undefined') throw('No se ha indicado el intervalo.');
+ if (typeof n_puntos != 'number') throw('Falta número de elementos o no es número.');
+ if (n_puntos < 2) throw ('N debe ser mayor que 1.');
+ if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
+ tipo = tipo.toUpperCase();
+ if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
+ if (typeof rellenar != 'boolean') throw('Indicación de relleno de datos errónea, debe ser VERDADERO o FALSO');
+ if (["SIMPLE", "CENTRAL", "PONDERADA"].some(t => t == tipo) && intervalo.length < n_puntos) throw('No hay suficientes valores en el intervalo.');
+ if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.'); 
+```
+
+Sí, uso `throw` para desencadenar una excepción. Bueno, varias. Y no, no tengo ningún manejador (`try` .. `catch`) escondido en el código. Lo interesante es que la excepción es interceptada automágicamente por alguna capa supervisora, que recoge el literal de texto que pasamos como parámetro y lo muestra dentro del mismo bonito recuadro flotante que despliegan las funciones integradas en las hojas de cálculo. La indicación del número de línea donde se ha arrojado la excepción parece ser inevitable, o al menos yo [no he conseguido](https://twitter.com/pfelipm/status/1228011092804329472) hacerlo desaparecer. 
+
+![Selección_089](https://user-images.githubusercontent.com/12829262/86272131-5e6bc680-bbce-11ea-88b9-c18da643da4a.png)
+
+Ni que decir tiene que una vez se lanza algún error la ejecución del código concluye. Una alternativa a esta estrategia es la de simplemente devolver como resultado de la función una cadena de texto con el mensaje de error, que quedará en la celda donde hemos utilizado la función. De hecho yo en ocasiones lo he hecho así (en el pasado). No obstante creo que este método es más elegante (salvo por lo del numerito, que es un detalle de implementación que solo interesa al desarrollador).
+
+Este control de parámetros inicial es realmente innecesario: si el usuario utiliza mal la función pues... aparecerá algún error feote y ya está. Pero en mi opinión son los pequeños detalles como este los que contribuyen a mejorar la experiencia de uso. Fíjate también en que convertimos los literales de texto que describen el tipo de media móvil a calcular a mayúsculas (`tipo.toUpperCase())` para ponerle las cosas fácil al sufrido usuario. El diablo está en los detalles.
+
+Salvado este escollo, comienza el trabajo de cálculo dentro del bucle principal de la función.
+
+```javascript
+ let matrizResultado = [];
+ let nf = intervalo.length;
+ let nc = intervalo[0].length;
+ 
+ for (let f = 0; f < nf; f++) {
+   
+   let fila = [];
+   
+   for (let c = 0; c < nc; c++) {
+     
+     switch (tipo) {
+     
+       // Media móvil SIMPLE
+       case 'SIMPLE':
+       ...
+       // Guardar valor calculado para columna actual en vector fila
+       break;
+       
+       // Media móvil ACUMULADA
+       case 'ACUMULADA':
+       ...
+       // Guardar valor calculado para columna actual en vector fila
+       break;
+       
+       // Media móvil CENTRAL
+       case 'CENTRAL':
+       ...
+       // Guardar valor calculado para columna actual en vector fila
+       break;
+
+       // Media móvil EXPONENCIAL
+       case 'EXPONENCIAL':
+       ...
+       // Guardar valor calculado para columna actual en vector fila
+       break;
+       
+       // Media móvil PONDERADA
+       case 'PONDERADA':
+       ...
+       // Guardar valor calculado para columna actual en vector fila
+       break;       
+       
+     }     
+   }
+       
+   matrizResultado.push(fila);
+ }
+  
+ return matrizResultado;    
+```
+
+Tenemos pues un bucle principal sencillo como el mecanismo de un botijo:
+
+1.  Preparamos la matriz que recogerá los valores de las series calculadas (`matrizResultado)`.
+2.  Identificamos las dimensiones del intervalo de datos de entrada (`intervalo.length`, `intervalo[0].length`). Y ojo con esto :warning: , la representación es siempre de tipo matricial. Un intervalo que cuente con solo 1 fila o columna llegará igualmente a nuestra función como un vector de vectores. Cuando se empieza a programar en GAS es habitual no caer en la cuenta de esta circunstancia aparentemente obvia, tratar el intervalo como una matriz unidimensional y... pasarse un rato mirando con estupor el estupendo error que aparece en pantalla al tratar de ejecutar el código.
+3.  Iteramos con sendos bucles `for` a lo ancho y largo (en ese orden) del intervalo de entrada. ~`S`~í, ya sé que `map` o `forEach` tienen más clase, pero la naturaleza iterativa del cálculo de algunas de las medias móviles me ha hecho preferir en esta ocasión volver a los  clásicos.
+4.  Mediante un `switch` se identifica el tipo de media móvil a calcular y se ejecuta el `case` adecuado, cuya implementación es puramente aritmética, para determinar el valor de la media móvil del elemento del intervalo en la fila y columna correspondiente.
+5.  Se empuja a la matriz de resultados los valores calculados para cada fila: `matrizResultado.push(fila)`.
+6.  Se devuelve como resultado la matriz de medias móviles calculadas: `return matrizResultado`.
 
 # **Licencia**
 
