@@ -11,7 +11,7 @@ De manera específica, los tipos de medias móviles soportados por `MEDIAMOVIL` 
 *   **Simple** (también llamada _previa_, es la empleada si no se indica lo contrario). Se tienen en cuenta los últimos n datos del intervalo.
 *   **Central**. En este caso se utilizan para el cálculo los `(n - 1) / 2` datos anteriores y posteriores a cada elemento de la serie. Este tipo de media móvil requiere que la ventana sea de tamaño impar.
 *   **Acumulada**. Similar a la media simple, pero ahora se tienen en cuenta _todos_ los valores previos del intervalo.
-*   **Ponderada.** Los valores del intervalo pierden peso en el cálculo a medida que _envejecen_. `MEDIAMOVIL` utiliza directamente la posición de valor dentro de la ventana como factor de ponderación, el más antiguo por tanto tendrá un peso de 1.
+*   **Ponderada.** Los valores del intervalo pierden peso en el cálculo a medida que _envejecen_. `MEDIAMOVIL` utiliza directamente la posición del valor dentro de la ventana como factor de ponderación, el más antiguo por tanto tendrá un peso de 1.
 *   **Exponencial**. Ahora los valores previos de la serie van perdiendo peso en el cálculo de manera proporcional a su antigüedad. La implementación de `MEDIAMOVIL` utiliza un factor de decrecimiento del tipo `2 / (n + 1)` y una ventana que pondera todos los valores anteriores del intervalo.
 
 Además, en el caso de las medias **simple**, **central** y **ponderada** es posible:
