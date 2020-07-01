@@ -47,6 +47,8 @@ Dos posibilidades distintas:
 
 Esta función estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/).
 
+![Selección_091](https://user-images.githubusercontent.com/12829262/86293166-64739e80-bbf2-11ea-8030-2e5f5c37fcaa.png)
+
 # Mirando bajo el capó :gear: (implementación)
 
 Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementación. Si no estás familiarizado con el modo en que se construyen las funciones personalizadas en Apps Script puedes empezar por pegarle un vistazo a la [documentación oficial](https://developers.google.com/apps-script/guides/sheets/functions). No te pierdas las limitaciones de este tipo de funciones, hay unas cuantas, entre ellas:
@@ -57,7 +59,11 @@ Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementac
 
 Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en cualquier fórmula, así de sencillo. Pero en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
 
-Para que la experiencia de uso de estas funciones personalizadas GAS sea lo más parecida posible a la del resto de funciones integradas en las hojas de cálculo de Google conviene incorporar en ellas la típica [ayuda contextual,](https://developers.google.com/apps-script/guides/sheets/functions#autocomplete) según se escribe, que nos va indicando cómo utilizar la función. Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/about-getting-started.html) adicionales.Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
+Para que la experiencia de uso de estas funciones personalizadas GAS sea lo más parecida posible a la del resto de funciones integradas en las hojas de cálculo de Google conviene incorporar en ellas la típica [ayuda contextual,](https://developers.google.com/apps-script/guides/sheets/functions#autocomplete) según se escribe, que nos va indicando cómo utilizar la función.
+
+![Selección_092](https://user-images.githubusercontent.com/12829262/86293368-c7fdcc00-bbf2-11ea-930b-77ab555cbbfc.png)
+
+Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/about-getting-started.html) adicionales.Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
 
 Veamos qué pinta tiene esto del JSDoc en esta función. Fíjate en las etiquetas que comienzan con @ y en cómo se relacionan con los parámetros definidos en la declaración de la función, justo en la última línea. Estamos usando el motor de ejecución V8 de Apps Script, eso nos permite declarar parámetros opcionales con valores por defecto (`n_puntos`, `rellenar`). Hace unos meses no era posible usar ambas cosas (V8 y parámetros por defecto) sin romper la ayuda contextual. Afortunadamente eso ya es cosa del pasado. En fin, que V8 mula mucho. Si aún no te has pasado a la sintaxis V8, que sea por alguno de sus bugs, que aún le quedan unos cuantos.
 
@@ -180,7 +186,7 @@ Aunque probablemente no era necesario, he tratado de optimizar los cálculos de 
 
 ```javascript
         case 'SIMPLE':
-         
+
          // [posición_valor_en_serie < n] Aún no disponemos de suficientes puntos para calcular la MM
          if (f < n_puntos - 1) {
            if (rellenar) fila.push(intervalo[f][c]);
@@ -196,7 +202,7 @@ Aunque probablemente no era necesario, he tratado de optimizar los cálculos de 
          }        
          // [posición_valor_en_serie > n] Resto de valores se calculan iterativamente (mejor que fuerza bruta)
          fila.push(matrizResultado[f - 1][c] + (intervalo[f][c] - intervalo[f - n_puntos][c]) / n_puntos);
-         
+
          break; 
 ```
 
@@ -210,7 +216,7 @@ La variable `f` representa la fila en la que nos encontramos, esto es, la posici
 
 Se me ocurren un par de modificaciones:
 
-*   Contemplar la posibilidad de utilizar una ventana de datos de tamaño facilitado como parámetro por el usuario también en la media móvil exponencial.
+*   Contemplar la posibilidad de utilizar una ventana de datos de tamaño facilitado, como parámetro, por el usuario también en la media móvil exponencial.
 *   Introducir la posibilidad de que el usuario proporcione un vector de pesos para el cálculo de la media móvil ponderada.
 
 Creo que ambas son fácilmente encajables en la implementación actual.
