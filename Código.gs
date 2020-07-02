@@ -8,7 +8,7 @@
  * @param {4} n_puntos Número de valores a promediar (3 por defecto). Solo tiene efecto en
  * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
  * @param {"SIMPLE"} tipo Tipo de media a calcular (ACUMULADA | CENTRAL | EXPONENCIAL | [SIMPLE] | PONDERADA).
- * @param {true} rellenar Indica si se deben tomar los valores del conjunto de datos de origen cuando no se dispone del 
+ * @param {VERDADERO} rellenar Indica si se deben tomar los valores del conjunto de datos de origen cuando no se dispone del 
  * número de puntos necesario para calcular el valor de la media móvil ([VERDADERO] | FALSO). Solo tiene efecto en
  * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
  *
