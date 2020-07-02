@@ -227,7 +227,7 @@ La variable `f` representa la fila en la que nos encontramos, esto es, la posici
 Se me ocurren un par de modificaciones:
 
 *   Contemplar la posibilidad de utilizar una ventana de datos de tamaño facilitado por el usuario como parámetro también en el caso del cálculo de la media móvil exponencial.
-*   Introducir la posibilidad de que el usuario proporcione un vector de pesos totalmente libre para el cálculo de la media móvil ponderada. Alguna estará pensando ¡espera, si eso es una [convolución](https://es.wikipedia.org/wiki/Convoluci%C3%B3n)! Premio.
+*   Introducir la posibilidad de que el usuario proporcione un vector de pesos totalmente libre para el cálculo de la media móvil ponderada. Alguno o alguna estará pensando... ¡espera, si eso es una [convolución](https://es.wikipedia.org/wiki/Convoluci%C3%B3n)! Premio.
 
 Creo que ambas mejoras son fácilmente encajables en la implementación actual.
 
