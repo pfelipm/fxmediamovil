@@ -9,7 +9,7 @@
  * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
  * @param {"SIMPLE"} tipo Tipo de media a calcular (ACUMULADA | CENTRAL | EXPONENCIAL | [SIMPLE] | PONDERADA).
  * @param {true} rellenar Indica si se deben tomar los valores del conjunto de datos de origen cuando no se dispone del 
- * número de puntos necesario para calcular el valor de la media móvil ([TRUE] | FALSE). Solo tiene efecto en
+ * número de puntos necesario para calcular el valor de la media móvil ([VERDADERO] | FALSO). Solo tiene efecto en
  * el cálculo de las medias móviles SIMPLE, CENTRAL y PONDERADA.
  *
  * @return Intervalo de datos calculados
@@ -59,7 +59,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
             continue;
           }          
           // [posición_valor_en_serie = n] 1er valor para el que puede ser calculada la media móvil            
-          if ( f == n_puntos - 1) {
+          if (f == n_puntos - 1) {
             let acumulado = 0;
             for (let i = 0; i < n_puntos; i++) acumulado += intervalo[f - i][c];
             fila.push(acumulado / n_puntos);
@@ -97,7 +97,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
             continue;
           }          
           // [posición_valor_en_serie dispone de suficientes valores pasados y futuros] Intervalo en el que es posible calcular la media central
-          if ( f >= ventana && f < nf - ventana) {
+          if (f >= ventana && f < nf - ventana) {
             let acumulado = intervalo[f][c];
             for (let i = 1; i <= ventana; i++) acumulado += intervalo[f - i][c] +  intervalo[f + i][c];
             fila.push(acumulado / n_puntos);
@@ -118,7 +118,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
             fila.push(intervalo[f][c]);
             continue;
           }        
-          // [posición_valor_en_serie > 1] Calculamos MM de manera iterativo
+          // [posición_valor_en_serie > 1] Calculamos MM de manera iterativa
           const k = 2 / (n_puntos + 1); // factor de decrecimiento
           fila.push(intervalo[f][c] * k + matrizResultado[f - 1][c] * (1 - k));
           
