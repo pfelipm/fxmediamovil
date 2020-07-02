@@ -4,7 +4,7 @@
 
 Este repositorio incluye el código Apps Script necesario para implementar la función personalizada para hojas de cálculo de Google `MEDIAMOVIL`.
 
-Los cálculos de **media móvil** se emplean para analizar intervalos de datos típicamente asociados a una secuencia temporal. Para cada elemento del intervalo se calcula un valor obtenida como consecuencia de la ponderación de un subconjunto de los datos (o _ventana_) de la serie original. La estrategia de selección, el tamaño de esa venta y el tipo de ponderación realizada son parámetros que caracterizan el tipo de media móvil calculada.
+Los cálculos de **media móvil** se emplean para analizar intervalos de datos típicamente asociados a una secuencia temporal. Para cada elemento del intervalo se calcula un valor obtenido como consecuencia de la ponderación de un subconjunto de los datos (o _ventana_) de la serie original. La estrategia de selección, el tamaño de esa venta y el tipo de ponderación realizada son parámetros que caracterizan el tipo de media móvil calculada.
 
 De manera específica, los tipos de medias móviles soportados por `MEDIAMOVIL` son estos:
 
@@ -17,7 +17,7 @@ De manera específica, los tipos de medias móviles soportados por `MEDIAMOVIL` 
 Además, en el caso de las medias **simple**, **central** y **ponderada** es posible:
 
 *   Indicar el nº de puntos que se tienen en cuenta dentro de la ventana de cálculo.
-*   Determinar cómo se tratará el cálculo de aquellos elementos de la serie de datos para los que no se dispone, por su posición en ella, del número de una ventana de tamaño suficiente.
+*   Determinar cómo se tratará el cálculo de aquellos elementos de la serie de datos para los que no se dispone, por su posición en ella, de una ventana móvil de tamaño suficiente.
 
 # Función MEDIAMOVIL()
 
@@ -27,7 +27,7 @@ Además, en el caso de las medias **simple**, **central** y **ponderada** es pos
 
 *   `intervalo`: Rango de datos sobre los que se debe calcular la media móvil. Se admiten rangos con varias columnas, en ese caso se obtendrá un intervalo con tantas series calculadas como columnas.
 *   `tipo`: Tipo de media móvil a calcular (literal): "`ACUMULADA"` | `"CENTRAL"` | `"EXPONENCIAL"` | \[`"SIMPLE"`\] | `"PONDERADA"`. Este parámetro (literal) es opcional, de no especificarse se utiliza la media simple.
-*   `n_puntos`: Tamaño de la ventana (número entero). Si no se indica se toma como valor predeterminado 3. Este parámetro no tiene efecto en las medias de tipo acumulado y exponencial.
+*   `n_puntos`: Tamaño de la ventana (número entero). Si no se indica se toma como valor predeterminado 3. Este parámetro no tiene efecto en las medias de tipo acumulado y exponencial, que siempre tienen en cuenta todos los elementos previos de la serie.
 *   `rellenar`: Especifica qué debe hacerse con aquellos elementos de la secuencia de datos para los que no puede realizarse el cálculo dado que no hay suficientes elementos en la ventana indicada (booleano). Si es `VERDADERO` se utiliza el valor del propio elemento. Si es `FALSO` se deja un espacio en blanco en la serie calculada. Si se omite se asume `VERDADERO`. Este parámetro tampoco tiene efecto en las medias de tipo acumulado y exponencial.
 
 Ejemplo:
@@ -45,27 +45,27 @@ Dos posibilidades distintas:
 1.  Abre el editor GAS de tu hoja de cálculo (`Herramientas` :fast\_forward: `Editor de secuencias de comandos`), pega el código que encontrarás dentro del archivo `Código.gs` de este repositorio y guarda los cambios. Debes asegurarte de que se esté utilizando el nuevo motor GAS JavaScript V8 (`Ejecutar` :fast\_forward: `Habilitar ... V8`).
 2.  Hazte una copia de esto :point\_right: [fx MEDIAMOVIL # demo](https://docs.google.com/spreadsheets/d/1rioEO9zZ4RqzQidTgrPzpTu7-m6wmjnBem5iV5u2qK4/template/preview) :point\_left:, elimina su contenido y edita a tu gusto.
 
-Esta función estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/).
+Esta función, `MEDIAMOVIL`, estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/), junto con otras nuevas funciones y características que tengo previsto implementar.
 
 ![Selección_091](https://user-images.githubusercontent.com/12829262/86293166-64739e80-bbf2-11ea-8030-2e5f5c37fcaa.png)
 
 # Mirando bajo el capó :gear: (implementación)
 
-Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementación. Si no estás familiarizado con el modo en que se construyen las funciones personalizadas en Apps Script puedes empezar por pegarle un vistazo a la [documentación oficial](https://developers.google.com/apps-script/guides/sheets/functions). No te pierdas las limitaciones de este tipo de funciones, hay unas cuantas, entre ellas:
+Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementación de `MEDIAMOVIL`. Si no estás familiarizado con el modo en que se construyen las **funciones personalizadas** en Apps Script puedes empezar por pegarle un vistazo a la [documentación oficial](https://developers.google.com/apps-script/guides/sheets/functions). No te pierdas las limitaciones de este tipo de funciones, hay unas cuantas, entre ellas:
 
-*   El tiempo de ejecución está limitado a 30 segundos.
+*   Su tiempo de ejecución está limitado a 30 segundos.
 *   Solo pueden modificar los datos contenidos en las celdas de los intervalos (rangos) que se pasan como parámetros.
-*   No es posible hacer ciertas cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita
+*   No es posible hacer _ciertas_ cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita su capacidad. Pero eso no quiere decir que puedan resultar extremadamente convenientes.
 
-Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en cualquier fórmula, así de sencillo. Pero en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
+Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en una fórmula, así de sencillo. Pero, recuerda, en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
 
 Para que la experiencia de uso de estas funciones personalizadas GAS sea lo más parecida posible a la del resto de funciones integradas en las hojas de cálculo de Google conviene incorporar en ellas la típica [ayuda contextual,](https://developers.google.com/apps-script/guides/sheets/functions#autocomplete) según se escribe, que nos va indicando cómo utilizar la función.
 
 ![Selección_092](https://user-images.githubusercontent.com/12829262/86293368-c7fdcc00-bbf2-11ea-930b-77ab555cbbfc.png)
 
-Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/about-getting-started.html) adicionales.Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
+Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/about-getting-started.html) adicionales. Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
 
-Veamos qué pinta tiene esto del JSDoc en esta función. Fíjate en las etiquetas que comienzan con @ y en cómo se relacionan con los parámetros definidos en la declaración de la función, justo en la última línea. Estamos usando el motor de ejecución V8 de Apps Script, eso nos permite declarar parámetros opcionales con valores por defecto (`n_puntos`, `rellenar`). Hace unos meses no era posible usar ambas cosas (V8 y parámetros por defecto) sin romper la ayuda contextual. Afortunadamente eso ya es cosa del pasado. En fin, que V8 mola mucho. Si aún no te has pasado a la sintaxis V8, que sea por alguno de sus bugs, que aún le quedan unos cuantos.
+Veamos qué pinta tienen estos códigos JSDoc en esta función. Fíjate en las etiquetas que comienzan con @ y en cómo se relacionan con los parámetros definidos en la declaración de la función, justo en la última línea del fragmento de código de aquí abajo:
 
 ```javascript
 /**
@@ -93,7 +93,17 @@ Veamos qué pinta tiene esto del JSDoc en esta función. Fíjate en las etiqueta
 function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) { 
 ```
 
-A continuación, alcanzamos los inevitables controles sobre los parámetros de entrada para evitar errores en tiempo de ejecución, controles que nunca parecen ser lo suficientemente exhaustivos como para evitar que llegue alguien capaz de dar con un caso no contemplado que se salte su lógica de seguridad ¿verdad? :facepalm:
+Estamos usando el motor de ejecución V8 de Apps Script, eso nos permite declarar parámetros opcionales con valores por defecto (`tipo`, `n_puntos`, `rellenar`) e invocar rápidamente nuestra función con algo tan sencillo como esto:
+
+```
+=MEDIAMOVIL( A1:B10 )
+```
+
+Los parámetros no explicitados adaptarán los valores indicados en la declaración de la función: `tipo = 'SIMPLE', n_puntos = 3, rellenar = true`. Tremendamente práctico.
+
+Aunque hace unos meses no era posible usar ambas cosas (V8 y parámetros por defecto) sin romper la ayuda contextual, afortunadamente eso ya es cosa del pasado. En fin, que V8 mola mucho. Si aún no te has pasado a la sintaxis V8, que sea por alguno de sus _bugs_, que aún le quedan unos cuantos.
+
+A continuación, alcanzamos los inevitables controles sobre los parámetros de entrada para evitar errores en tiempo de ejecución, controles que nunca parecen ser lo suficientemente exhaustivos como para impedir totalmente que llegue algún manazas capaz de dar con un caso no contemplado que se salte su lógica de seguridad ¿verdad? :facepalm:
 
 ```javascript
  // Control de parámetros inicial
@@ -210,16 +220,16 @@ La variable `f` representa la fila en la que nos encontramos, esto es, la posici
 
 1.  La primera comprobación (`f < n_puntos - 1)` detecta, en función del tamaño especificado para nuestra bonita ventana móvil, si aún no podemos realizar el cálculo. En esa caso hará una cosa u otra dependiendo del parámetro `rellenar` ¿recuerdas?
 2.  La segunda comprobación (`f == n_puntos - 1`) determina el primer elemento de la serie sobre el que debe realizarse el calculo de la media móvil de manera completa, sumando los `f - 1` valores anteriores de la serie con el actual y dividiendo entre el tamaño de la ventana.
-3.  Para el resto de valores (`f > n_puntos - 1`), se calcula la media móvil del valor en función de la obtenida en la iteración inmediatamente anterior más la diferencia entre el valor actual de la serie y el más antiguo, dentro de la ventana, que ahora quedará fuera de ella (por algo esto es una media móvil), dividido por el tamaño de dicha venta. Como diría un celebre humorista hispano, _los que entran por los que van saliendo_.
+3.  Para el resto de valores (`f > n_puntos - 1`), se calcula la media móvil del valor en función de la obtenida en la iteración inmediatamente anterior más la diferencia entre el valor actual de la serie y el más antiguo, dentro de la ventana, que ahora quedará fuera de ella (por algo esto es una media móvil), dividido por el tamaño de dicha venta. Como diría un célebre humorista hispano, _los que entran por los que van saliendo_.
 
 # Mejoras
 
 Se me ocurren un par de modificaciones:
 
-*   Contemplar la posibilidad de utilizar una ventana de datos de tamaño facilitado, como parámetro, por el usuario también en la media móvil exponencial.
-*   Introducir la posibilidad de que el usuario proporcione un vector de pesos para el cálculo de la media móvil ponderada.
+*   Contemplar la posibilidad de utilizar una ventana de datos de tamaño facilitado por el usuario como parámetro también en el caso del cálculo de la media móvil exponencial.
+*   Introducir la posibilidad de que el usuario proporcione un vector de pesos totalmente libre para el cálculo de la media móvil ponderada. Alguna estará pensando ¡espera, si eso es una [convolución](https://es.wikipedia.org/wiki/Convoluci%C3%B3n)! Premio.
 
-Creo que ambas son fácilmente encajables en la implementación actual.
+Creo que ambas mejoras son fácilmente encajables en la implementación actual.
 
 # **Licencia**
 
