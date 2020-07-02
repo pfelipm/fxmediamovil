@@ -45,7 +45,7 @@ Dos posibilidades distintas:
 1.  Abre el editor GAS de tu hoja de cálculo (`Herramientas` :fast\_forward: `Editor de secuencias de comandos`), pega el código que encontrarás dentro del archivo `Código.gs` de este repositorio y guarda los cambios. Debes asegurarte de que se esté utilizando el nuevo motor GAS JavaScript V8 (`Ejecutar` :fast\_forward: `Habilitar ... V8`).
 2.  Hazte una copia de esto :point\_right: [fx MEDIAMOVIL # demo](https://docs.google.com/spreadsheets/d/1rioEO9zZ4RqzQidTgrPzpTu7-m6wmjnBem5iV5u2qK4/template/preview) :point\_left:, elimina su contenido y edita a tu gusto.
 
-Esta función, `MEDIAMOVIL`, estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/), junto con otras nuevas funciones y características que tengo previsto implementar.
+Esta función, `MEDIAMOVIL`, estará en breve disponible en mi complemento para hojas de cálculo [HdC+](https://tictools.tk/hdcplus/), junto con otras nuevas características que tengo previsto implementar próximamente.
 
 ![Selección_091](https://user-images.githubusercontent.com/12829262/86293166-64739e80-bbf2-11ea-8030-2e5f5c37fcaa.png)
 
