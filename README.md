@@ -108,15 +108,15 @@ A continuación, alcanzamos los inevitables controles sobre los parámetros de e
 ```javascript
  // Control de parámetros inicial
 
- if (typeof intervalo == 'undefined') throw('No se ha indicado el intervalo.');
- if (typeof n_puntos != 'number') throw('Falta número de elementos o no es número.');
- if (n_puntos < 2) throw ('N debe ser mayor que 1.');
- if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
- tipo = tipo.toUpperCase();
- if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
- if (typeof rellenar != 'boolean') throw('Indicación de relleno de datos errónea, debe ser VERDADERO o FALSO');
- if (["SIMPLE", "CENTRAL", "PONDERADA"].some(t => t == tipo) && intervalo.length < n_puntos) throw('No hay suficientes valores en el intervalo.');
- if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.'); 
+  if (typeof intervalo == 'undefined' || !Array.isArray(intervalo)) throw('No se ha indicado un intervalo de datos.');
+  if (typeof n_puntos != 'number') throw('Falta número de elementos o no es número.');
+  if (n_puntos < 2) throw ('N debe ser mayor que 1.');
+  if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
+  tipo = tipo.toUpperCase();
+  if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
+  if (typeof rellenar != 'boolean') throw('Indicación de relleno de datos errónea, debe ser VERDADERO o FALSO');
+  if (["SIMPLE", "CENTRAL", "PONDERADA"].some(t => t == tipo) && intervalo.length < n_puntos) throw('No hay suficientes valores en el intervalo.');
+  if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.');
 ```
 
 Sí, uso `throw` para desencadenar una excepción. Bueno, varios. Y no, no tengo ningún manejador (`try` .. `catch`) escondido en el código. Lo interesante es que la excepción es interceptada _automágicamente_ por alguna capa supervisora, que recoge el literal de texto que pasamos como parámetro y lo muestra dentro de ese mismo bonito recuadro flotante que despliegan las funciones integradas en las hojas de cálculo. La indicación del número de línea donde se ha producido la excepción parece ser inevitable, o al menos yo [no he conseguido](https://twitter.com/pfelipm/status/1228011092804329472) hacerlo desaparecer.
