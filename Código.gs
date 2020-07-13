@@ -24,7 +24,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
 
   // Control de parámetros inicial
   
-  if (typeof intervalo == 'undefined') throw('No se ha indicado el intervalo.');
+  if (typeof intervalo == 'undefined' || !Array.isArray(intervalo)) throw('No se ha indicado un intervalo de datos.');
   if (typeof n_puntos != 'number') throw('Falta número de elementos o no es número.');
   if (n_puntos < 2) throw ('N debe ser mayor que 1.');
   if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
@@ -32,7 +32,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
   if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
   if (typeof rellenar != 'boolean') throw('Indicación de relleno de datos errónea, debe ser VERDADERO o FALSO');
   if (["SIMPLE", "CENTRAL", "PONDERADA"].some(t => t == tipo) && intervalo.length < n_puntos) throw('No hay suficientes valores en el intervalo.');
-  if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.'); 
+  if (tipo == 'CENTRAL' && n_puntos % 2 == 0) throw('El nº de puntos debe ser impar al utilizar una media móvil central.');
   
   // Parece que todo correcto, calculemos la media móvil
   
