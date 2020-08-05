@@ -19,6 +19,8 @@ Además, en el caso de las medias **simple**, **central** y **ponderada** es pos
 *   Indicar el nº de puntos que se tienen en cuenta dentro de la ventana de cálculo.
 *   Determinar cómo se tratará el cálculo de aquellos elementos de la serie de datos para los que no se dispone, por su posición en ella, de una ventana móvil de tamaño suficiente.
 
+Si has llegado a este repositorio directamente, quizás quieras, antes de seguir leyendo, echarle un vistazo a este [artículo introductorio](https://pablofelip.online/medias-moviles-gas/) sobre las medias móviles.
+
 # Función MEDIAMOVIL()
 
 ```
