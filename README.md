@@ -2,7 +2,7 @@
 
 # Medias móviles para las hojas de cálculo de Google
 
-Este repositorio incluye el código Apps Script necesario para implementar la función personalizada para hojas de cálculo de Google `MEDIAMOVIL`. Si has llegado aquí directamente quizás quieras, antes de seguir leyendo, echarle un vistazo a este [artículo introductorio](https://pablofelip.online/medias-moviles-gas/) sobre las medias móviles.
+Este repositorio contiene el código Apps Script necesario para implementar la función personalizada para hojas de cálculo de Google `MEDIAMOVIL`. Si has llegado aquí directamente quizás quieras, antes de seguir leyendo, echarle un vistazo a este [artículo introductorio](https://pablofelip.online/medias-moviles-gas/) sobre las medias móviles.
 
 Los cálculos de **media móvil** se emplean para analizar intervalos de datos típicamente asociados a una secuencia temporal. Para cada elemento del intervalo se calcula un valor obtenido como consecuencia de la ponderación de un subconjunto de los datos (o _ventana_) de la serie original. La estrategia de selección, el tamaño de esa venta y el tipo de ponderación realizada son parámetros que caracterizan el tipo de media móvil calculada.
 
