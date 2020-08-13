@@ -63,7 +63,7 @@ Para que la experiencia de uso de estas funciones personalizadas GAS sea lo más
 
 ![Selección_092](https://user-images.githubusercontent.com/12829262/86293368-c7fdcc00-bbf2-11ea-930b-77ab555cbbfc.png)
 
-Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/about-getting-started.html) adicionales. Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
+Esto se consigue con la etiqueta especial `@customfunction` en su encabezado, que debe ir acompañada de toda una serie de marcadores [JSDoc](https://jsdoc.app/index.html) adicionales. Dado que la documentación oficial de Google se queda bastante corta, te sugiero que leas detenidamente este excelente [artículo](https://mogsdad.wordpress.com/2015/07/08/did-you-know-custom-functions-in-google-apps-script/) en su lugar para entender bien todo o casi todo lo que se puede hacer con JSDoc y estas funciones personalizadas Apps Script (:warning: el uso de etiquetas HTML parece que ya no está soportado).
 
 Veamos qué pinta tienen estos códigos JSDoc en esta función. Fíjate en las etiquetas que comienzan con @ y en cómo se relacionan con los parámetros definidos en la declaración de la función, justo en la última línea del fragmento de código de aquí abajo:
 
