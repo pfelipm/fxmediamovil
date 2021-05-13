@@ -55,7 +55,7 @@ Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementac
 
 *   Su tiempo de ejecución está limitado a 30 segundos.
 *   Solo pueden modificar los datos contenidos en las celdas de los intervalos (rangos) que se pasan como parámetros.
-*   No es posible hacer _ciertas_ cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita su capacidad. Pero eso no quiere decir que puedan resultar extremadamente convenientes.
+*   No es posible hacer _ciertas_ cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita su capacidad. Pero eso no quiere decir en absoluto que carezcan de utilidad, todo lo contrario, a menudo resultan extremadamente convenientes.
 
 Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en una fórmula, así de sencillo. Pero, recuerda, en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
 
