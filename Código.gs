@@ -26,7 +26,7 @@ function MEDIAMOVIL(intervalo, tipo = 'SIMPLE', n_puntos = 3, rellenar = true) {
   
   if (typeof intervalo == 'undefined' || !Array.isArray(intervalo)) throw('No se ha indicado un intervalo de datos.');
   if (typeof n_puntos != 'number') throw('Falta número de elementos o no es número.');
-  if (n_puntos < 2) throw ('N debe ser mayor que 1.');
+  if (n_puntos < 2) throw('N debe ser mayor que 1.');
   if (typeof tipo != 'string') throw('Tipo de media incorrecto.');
   tipo = tipo.toUpperCase();
   if (!(["SIMPLE", "ACUMULADA", "CENTRAL", "EXPONENCIAL", "PONDERADA"].some(t => t == tipo))) throw('Tipo de media desconocido');
