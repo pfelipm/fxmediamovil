@@ -54,7 +54,7 @@ Esta función, `MEDIAMOVIL`, estará en breve disponible en mi complemento para 
 Aunque no hay nada especialmente reseñable, echemos un vistazo a la implementación de `MEDIAMOVIL`. Si no estás familiarizado con el modo en que se construyen las **funciones personalizadas** en Apps Script puedes empezar por pegarle un vistazo a la [documentación oficial](https://developers.google.com/apps-script/guides/sheets/functions). No te pierdas las limitaciones de este tipo de funciones, hay unas cuantas, entre ellas:
 
 *   Su tiempo de ejecución está limitado a 30 segundos.
-*   Solo pueden modificar los datos contenidos en las celdas de los intervalos (rangos) que se pasan como parámetros.
+*   Solo pueden modificar las celdas que en las que se escriben los valores que retornan, es decir, las situadas hacia la derecha y hacia abajo a partir de la celda que contiene la fórmula en la que se usa la función.
 *   No es posible hacer _ciertas_ cosas. Qué digo ciertas, ¡muchas cosas! La realidad es que el código dentro de una de estas funciones tiene prohibido utilizar [numerosos](https://developers.google.com/apps-script/guides/sheets/functions#using_apps_script_services) servicios Apps Script habituales, lo que sin duda limita su capacidad. Pero eso no quiere decir en absoluto que carezcan de utilidad, todo lo contrario, a menudo resultan extremadamente convenientes.
 
 Pero sigamos... Verás que en realidad cualquier función GAS asociada a una hoja de cálculo puede ser invocada directamente utilizando su nombre en una fórmula, así de sencillo. Pero, recuerda, en ese caso aplican las anteriores (y otras) limitaciones y particularidades.
