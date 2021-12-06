@@ -1,5 +1,7 @@
 ![Banner MEDIAMOVIL](https://user-images.githubusercontent.com/12829262/83059749-b147e080-a05a-11ea-8c56-ece164af0b2e.png)
 
+![Creado con - Google Apps Script](https://img.shields.io/static/v1?label=Creado+con&message=Google+Apps+Script&color=blue&style=for-the-badge&logo=GAS)
+
 # Medias móviles para las hojas de cálculo de Google
 
 Este repositorio contiene el código Apps Script necesario para implementar la función personalizada para hojas de cálculo de Google `MEDIAMOVIL`. Si has llegado aquí directamente quizás quieras, antes de seguir leyendo, echarle un vistazo a este [artículo introductorio](https://pablofelip.online/medias-moviles-gas/) sobre las medias móviles.
